@@ -3,46 +3,69 @@ package mai.team1.pz;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
-    String[] countries = { "Бразилия", "Аргентина", "Колумбия", "Чили", "Уругвай"};
+    ArrayList<String> users = new ArrayList<String>();
+    ArrayList<String> selectedUsers = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
+    ListView usersList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        TextView selection = findViewById(R.id.selection);
+        Collections.addAll(users, "Tom", "Bob", "Sam", "Alice");
 
-        ListView countriesList = findViewById(R.id.countriesList);
+        usersList = findViewById(R.id.usersList);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_multiple_choice, countries);
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, users);
 
-        countriesList.setAdapter(adapter);
+        usersList.setAdapter(adapter);
 
-        countriesList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id)
             {
-                SparseBooleanArray selected=countriesList.getCheckedItemPositions();
 
-                String selectedItems="";
-                for(int i=0;i < countries.length;i++)
-                {
-                    if(selected.get(i))
-                        selectedItems+=countries[i]+",";
-                }
-                // установка текста элемента TextView
-                selection.setText("Выбрано: " + selectedItems);
+                String user = adapter.getItem(position);
+                if(usersList.isItemChecked(position))
+                    selectedUsers.add(user);
+                else
+                    selectedUsers.remove(user);
             }
         });
+    }
+
+    public void add(View view){
+
+        EditText userName = findViewById(R.id.userName);
+        String user = userName.getText().toString();
+        if(!user.isEmpty()){
+            adapter.add(user);
+            userName.setText("");
+            adapter.notifyDataSetChanged();
+        }
+    }
+    public void remove(View view){
+
+        for(int i=0; i< selectedUsers.size();i++){
+            adapter.remove(selectedUsers.get(i));
+        }
+
+        usersList.clearChoices();
+
+        selectedUsers.clear();
+
+        adapter.notifyDataSetChanged();
     }
 }
