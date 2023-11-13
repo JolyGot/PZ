@@ -4,45 +4,41 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
-import java.util.ArrayList;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<State> states = new ArrayList<State>();
-    ListView countriesList;
+    String[] countries = { "Бразилия", "Аргентина", "Колумбия", "Чили", "Уругвай"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setInitialData();
+        TextView selection = findViewById(R.id.selection);
 
-        countriesList = findViewById(R.id.countriesList);
+        Spinner spinner = findViewById(R.id.spinner);
 
-        StateAdapter stateAdapter = new StateAdapter(this, R.layout.list_item, states);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, countries);
 
-        countriesList.setAdapter(stateAdapter);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
+        spinner.setAdapter(adapter);
+
+        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
 
-                State selectedState = (State)parent.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Был выбран пункт " + selectedState.getName(),
-                        Toast.LENGTH_SHORT).show();
+                String item = (String)parent.getItemAtPosition(position);
+                selection.setText(item);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         };
-        countriesList.setOnItemClickListener(itemListener);
-    }
-    private void setInitialData(){
-
-        states.add(new State ("Бразилия", "Бразилиа", R.drawable.brazilia));
-        states.add(new State ("Аргентина", "Буэнос-Айрес", R.drawable.argentina));
-        states.add(new State ("Колумбия", "Богота", R.drawable.columbia));
-        states.add(new State ("Уругвай", "Монтевидео", R.drawable.uruguai));
-        states.add(new State ("Чили", "Сантьяго", R.drawable.chile));
+        spinner.setOnItemSelectedListener(itemSelectedListener);
     }
 }
