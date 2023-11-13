@@ -4,7 +4,7 @@ public class State {
 
     private String name;
     private String capital;
-    private int flagResource;
+    private int flagResource; 
 
     public State(String name, String capital, int flag){
 
