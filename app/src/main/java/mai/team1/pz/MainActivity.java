@@ -2,22 +2,35 @@ package mai.team1.pz;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.MultiAutoCompleteTextView;
+import android.widget.GridView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    String[] cities = {"Москва", "Самара", "Вологда", "Волгоград", "Саратов", "Воронеж"};
+    String[] countries = { "Бразилия", "Аргентина", "Чили", "Колумбия", "Уругвай"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MultiAutoCompleteTextView autoCompleteTextView = findViewById(R.id.autocomplete);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(this,  android.R.layout.select_dialog_item, cities);
-        autoCompleteTextView.setAdapter(adapter);
+        GridView countriesList = findViewById(R.id.gridview);
 
-        autoCompleteTextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, countries);
+        countriesList.setAdapter(adapter);
+
+        AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(),"Вы выбрали "
+                                + parent.getItemAtPosition(position).toString(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        };
+        countriesList.setOnItemClickListener(itemListener);
     }
 }
